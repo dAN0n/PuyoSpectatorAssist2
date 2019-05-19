@@ -32,7 +32,7 @@ test_matrix2 = np.asarray([['0', '0', '0', '0', '0', '0'],
                            ['R', 'R', 'G', 'G', 'P', 'Y']])
 
 class SimulatorSettings:
-    def __init__(self, settings = None):
+    def __init__(self, settings=None):
         '''
         Load default Tsu rule settings by default.
         Supply settings {} otherwise.
@@ -349,7 +349,7 @@ class ChainSimulator:
         webbrowser.open(url)
 
 class BruteForcePop:
-    def __init__(self, matrix, settings, auto = True, print_result = True):
+    def __init__(self, matrix, settings, auto=True, print_result=True):
         self.matrix = copy.copy(matrix)
         self.settings = settings
         self.test_matrices = []
