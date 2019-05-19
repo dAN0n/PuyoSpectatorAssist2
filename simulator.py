@@ -326,35 +326,24 @@ class ChainSimulator:
         while self.has_pops is not False: self.simulateLink()
         return self
     
-    def openURL(self, chain = 'initial'):
-        convert = {'R': 4,
-               'G': 7,
-               'B': 5,
-               'Y': 6,
-               'P': 8,
-               'J': 1,
-               '0': 0}
-
-        if chain == 'initial':
-            PN_matrix = copy.copy(self.initial_matrix)
-        elif chain == 'result':
-            PN_matrix = copy.copy(self.matrix)
-
-        # Matrix dimensions
-        rows = PN_matrix.shape[0]
-        cols = PN_matrix.shape[1]
-
-        for row in range(0, rows):
-            for col in range(0, cols):
-                PN_matrix[row, col] = convert[str(PN_matrix[row, col])]
-
-        chaincode = str()
-        for r in range(len(PN_matrix)):
-            chaincode += np.array2string(PN_matrix[r]).replace(
-                '[', '').replace("\'", "").replace(']', '').replace(' ', '')
-
-        url = ('https://puyonexus.com/chainsim/?w=' + str(PN_matrix.shape[1]) +
-            '&h=' + str(PN_matrix.shape[0] - 1) + '&chain=' + str(chaincode))
+    def openURL(self, initial_chain=True):
+        PN_matrix = self.initial_matrix if initial_chain else self.matrix
+        convert = {
+            'R': 4,
+            'G': 7,
+            'B': 5,
+            'Y': 6,
+            'P': 8,
+            'J': 1,
+            '0': 0,
+        }
+        url = (
+            "https://puyonexus.com/chainsim/?w={width}&h={height}&chain={chaincode}"
+        ).format(
+            width=PN_matrix.shape[1],
+            height=PN_matrix.shape[0] - self.settings.hidden_rows,
+            chaincode=''.join([str(convert[i]) for i in PN_matrix.flat]),
+        )
         webbrowser.open(url)
 
 class BruteForcePop:
