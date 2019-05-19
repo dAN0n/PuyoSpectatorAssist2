@@ -1,6 +1,8 @@
+from math import sqrt
+
 from create_overlay_image import ChainInfoOverlay
 import tkinter as tk
-from PIL import ImageTk, Image
+from PIL import ImageTk
 import cv2
 import numpy as np
 
@@ -39,30 +41,43 @@ class PuyoSpectatorAssist(tk.Tk):
 
         for index, new_BGR in enumerate(new_p1_next_BGRs):
             new_BGR = cv2.mean(self.screenshot, mask=self.p1_masks[index])[:3]
-            if new_BGR != self.p1_next_BGRs[index]: p1_change = True
+            p1_change = self.isColorChanged(self.p1_next_BGRs[index], new_BGR, 0.01)
             self.p1_next_BGRs[index] = new_BGR
 
         for index, new_BGR in enumerate(new_p2_next_BGRs):
             new_BGR = cv2.mean(self.screenshot, mask=self.p2_masks[index])[:3]
-            if new_BGR != self.p2_next_BGRs[index]: p2_change = True
+            p2_change = self.isColorChanged(self.p2_next_BGRs[index], new_BGR, 0.01)
             self.p2_next_BGRs[index] = new_BGR
 
         if p1_change is True: print('P1 next piece changed.')
         if p2_change is True: print('P2 next piece changed.')
         self.changeOverlay(p1_change=p1_change, p2_change=p2_change)
 
-    def changeOverlay(self, p1_change = False, p2_change = False):
-        self.overlay_maker.scrapeMatrices().analyzePops()
-
+    def changeOverlay(self, p1_change=False, p2_change=False):
         if p1_change is True: self.overlay_maker.display_p1 = True
         if p2_change is True: self.overlay_maker.display_p2 = True
-        
+
+        if p1_change or p2_change:
+            self.overlay_maker.scrapeMatrices().analyzePops()
         overlay = self.overlay_maker.createOverlay().overlay
 
         self.overlay_image = ImageTk.PhotoImage(overlay)
         self.displayCanvas.config(image=self.overlay_image)
 
         self.after(17, self.detectPieceChange)
+
+    def isColorChanged(self, old_BGR, new_BGR, percentage, use_old_check=False):
+        if use_old_check:
+            return True if new_BGR != old_BGR else False
+        # Get max vector length in color cube (100% value)
+        # where (0, 0, 0) - black, (255, 255, 255) - white
+        max_length = sqrt(abs(255 ** 2 * 3))
+        # Get vector length between old and new color
+        color_diff_sum = 0
+        for i in range(0, 3):
+            color_diff_sum += (new_BGR[i] - old_BGR[i]) ** 2
+        length = sqrt(abs(color_diff_sum))
+        return True if length / max_length >= percentage else False
     
     def run(self):
         self.mainloop()
