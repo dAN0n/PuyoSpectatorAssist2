@@ -43,9 +43,11 @@ class SimulatorSettings:
             self.puyo_to_pop = 4
             self.target_point = 70
             self.hidden_rows = 1
-            self.chain_powers = [0, 8, 16, 32, 64, 96, 128, 160, 192, 224, 256,
-                                 288, 320, 352, 384, 416, 448, 480, 512, 544,
-                                 576, 608, 640, 672]
+            self.chain_powers = [
+                0, 8, 16, 32, 64, 96, 128, 160, 192, 224, 256,
+                288, 320, 352, 384, 416, 448, 480, 512, 544,
+                576, 608, 640, 672
+            ]
             self.color_bonus = [0, 3, 6, 12, 24]
             self.group_bonus = [0, 2, 3, 4, 5, 6, 7, 10]
         else:
@@ -313,7 +315,7 @@ class ChainSimulator:
             .checkPuyoPops() \
             .checkGarbagePops() \
         
-        if self.has_pops == True:
+        if self.has_pops:
             self.scoreChainLink() \
                 .calculateGarbage() \
                 .popPuyos() \
@@ -360,8 +362,7 @@ class BruteForcePop:
     def generateMatrices(self):
         # Check if matrix is already popping.
         # Don't continue with rest of function if it is.
-        test_matrix = ChainSimulator(self.matrix, self.settings).simulateChain()
-        if test_matrix.chain_length > 0:
+        if ChainSimulator(self.matrix, self.settings).applyGravity().checkPuyoPops().has_pops:
             self.already_popping = True
             return self
         
