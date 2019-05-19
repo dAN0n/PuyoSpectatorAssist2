@@ -426,8 +426,7 @@ class BruteForcePop:
             if (matrix['row'], matrix['col']) not in used_coords:
                 popping_matrices.append(matrix)
                 used_coords.append((matrix['row'], matrix['col']))
-        if popping_matrices:
-            self.popping_matrices = popping_matrices
+        self.popping_matrices = popping_matrices
         return self
 
 settings = SimulatorSettings()
