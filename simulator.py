@@ -356,7 +356,7 @@ class BruteForcePop:
         self.popping_matrices = []
         self.already_popping = False
         if auto is True:
-            self.generateMatrices().simulateMatrices()
+            self.generateMatrices().simulateMatrices().excludeRedundantPoppingMatrices()
             if print_result is True: print(self.popping_matrices)
 
     def generateMatrices(self):
@@ -417,6 +417,17 @@ class BruteForcePop:
             matrix_data['chain_length'] = sim.chain_length
             if matrix_data['chain_length'] >= 2:
                 self.popping_matrices.append(matrix_data)
+        return self
+
+    def excludeRedundantPoppingMatrices(self):
+        popping_matrices, used_coords = [], []
+        self.popping_matrices.sort(key=lambda i: (-i['chain_length'], -i['score']))
+        for matrix in self.popping_matrices:
+            if (matrix['row'], matrix['col']) not in used_coords:
+                popping_matrices.append(matrix)
+                used_coords.append((matrix['row'], matrix['col']))
+        if popping_matrices:
+            self.popping_matrices = popping_matrices
         return self
 
 settings = SimulatorSettings()
