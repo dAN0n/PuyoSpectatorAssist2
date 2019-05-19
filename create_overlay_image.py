@@ -7,6 +7,7 @@ import copy
 from simulator import BruteForcePop, SimulatorSettings
 from scrape_matrix import scrapeMatrix
 
+
 # Test matrix
 test_matrix = np.asarray([['0', '0', '0', '0', '0', '0'],
                           ['0', '0', '0', '0', '0', '0'],
@@ -28,64 +29,25 @@ settings = SimulatorSettings()
 # Load images
 cell_width = 64
 cell_height = 60
+cell_size = (cell_width, cell_height)
 
-green_bg = Image.open('img/green_bg.png')
-red_ret = Image.open('img/cursor/red_cursor.png')
-red_ret = red_ret.resize((cell_width, cell_height))
-green_ret = Image.open('img/cursor/green_cursor.png')
-green_ret = green_ret.resize((cell_width, cell_height))
-blue_ret = Image.open('img/cursor/blue_cursor.png')
-blue_ret = blue_ret.resize((cell_width, cell_height))
-yellow_ret = Image.open('img/cursor/yellow_cursor.png')
-yellow_ret = yellow_ret.resize((cell_width, cell_height))
-purple_ret = Image.open('img/cursor/purple_cursor.png')
-purple_ret = purple_ret.resize((cell_width, cell_height))
+image_extension = '.png'
+image_dir = 'img/'
+cursor_file = '{}cursor/{{}}_cursor{}'.format(image_dir, image_extension)
+numbers_file = '{}numbers/{{}}{}'.format(image_dir, image_extension)
+
+green_bg = Image.open('{0}{2}{1}'.format(image_dir, image_extension, 'green_bg'))
 reticules = {
-    'R': red_ret,
-    'G': green_ret,
-    'B': blue_ret,
-    'Y': yellow_ret,
-    'P': purple_ret
+    code: Image.open(cursor_file.format(name)).resize(cell_size)
+    for code, name in [
+        ('R', 'red'), ('G', 'green'), ('B', 'blue'), ('Y', 'yellow'), ('P', 'purple')
+    ]
+}
+numbers = {
+    code: Image.open(numbers_file.format(name)).resize(cell_size)
+    for code, name in [(str(i), str(i) if i < 10 else 'omg') for i in range(2, 20)]
 }
 
-two = Image.open('img/numbers/2.png')
-three = Image.open('img/numbers/3.png')
-four = Image.open('img/numbers/4.png')
-five = Image.open('img/numbers/5.png')
-six = Image.open('img/numbers/6.png')
-seven = Image.open('img/numbers/7.png')
-eight = Image.open('img/numbers/8.png')
-nine = Image.open('img/numbers/9.png')
-omg = Image.open('img/numbers/omg.png')
-two = two.resize((cell_width, cell_height))
-three = three.resize((cell_width, cell_height))
-four = four.resize((cell_width, cell_height))
-five = five.resize((cell_width, cell_height))
-six = six.resize((cell_width, cell_height))
-seven = seven.resize((cell_width, cell_height))
-eight = eight.resize((cell_width, cell_height))
-nine = nine.resize((cell_width, cell_height))
-omg = omg.resize((cell_width, cell_height))
-numbers = {
-    '2': two,
-    '3': three,
-    '4': four,
-    '5': five,
-    '6': six,
-    '7': seven,
-    '8': eight,
-    '9': nine,
-    '10': omg,
-    '11': omg,
-    '12': omg,
-    '13': omg,
-    '14': omg,
-    '15': omg,
-    '16': omg,
-    '17': omg,
-    '18': omg,
-    '19': omg
-}
 
 class ChainInfoOverlay:
     def __init__(self, puyo_skin='aqua', testmode=False):
