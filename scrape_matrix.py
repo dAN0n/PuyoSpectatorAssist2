@@ -3,8 +3,6 @@ import numpy as np
 import cv2
 from simulator import SimulatorSettings, ChainSimulator
 
-with open('calibration_BGR.json', 'r') as fp:
-    color_limits = json.load(fp)
 
 def cropPuyo(screenshot, player_num, rowcoltuple):
     row = rowcoltuple[0]
@@ -30,7 +28,6 @@ def guessColor(puyo_img, limits):
     cv2.circle(circle_mask, (width // 2, height // 2), height // 2, (255, 255, 255), -1)
     avg_color = cv2.mean(puyo_img, mask=circle_mask)[:3]
 
-    color = ''
     if (avg_color[0] > limits['red']['lower'][0] and avg_color[0] < limits['red']['upper'][0] and
             avg_color[1] > limits['red']['lower'][1] and avg_color[1] < limits['red']['upper'][1] and
             avg_color[2] > limits['red']['lower'][2] and avg_color[2] < limits['red']['upper'][2]):
@@ -60,8 +57,10 @@ def guessColor(puyo_img, limits):
     
     return(color)
 
-def scrapeMatrix(screenshot, player_num):
+def scrapeMatrix(screenshot, player_num, json_postfix='aqua'):
     matrix = [['0', '0', '0', '0', '0', '0']]
+    with open('calibration_BGR_{}.json'.format(json_postfix), 'r') as fp:
+        color_limits = json.load(fp)
     for row in range(0, 12):
         new_row = []
         for col in range (0, 6):
@@ -75,7 +74,7 @@ if __name__ == '__main__':
     # Test read
     settings = SimulatorSettings()
     test_image = cv2.imread('calibration_images/ringo_seriri_1.png')
-    matrix = scrapeMatrix(test_image, 2)
+    matrix = scrapeMatrix(test_image, 2, 'aqua')
     puyo_matrix = ChainSimulator(matrix, settings).simulateChain()
     print(puyo_matrix.initial_matrix)
     puyo_matrix.openURL()

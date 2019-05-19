@@ -5,9 +5,9 @@ import cv2
 import numpy as np
 
 class PuyoSpectatorAssist(tk.Tk):
-    def __init__(self):
+    def __init__(self, puyo_skin='aqua'):
         tk.Tk.__init__(self)
-        self.overlay_maker = ChainInfoOverlay(testmode=False)
+        self.overlay_maker = ChainInfoOverlay(puyo_skin=puyo_skin, testmode=False)
         self.overlay_image = ImageTk.PhotoImage(file='img/green_bg.png')
         self.displayCanvas = tk.Label(self)
         self.displayCanvas.pack()
@@ -67,7 +67,7 @@ class PuyoSpectatorAssist(tk.Tk):
     def run(self):
         self.mainloop()
 
-root = PuyoSpectatorAssist()
+root = PuyoSpectatorAssist(puyo_skin='aqua')
 root.title('PuyoSpectatorAssist Overlay')
 root.geometry('1920x1080')
 root.detectPieceChange()

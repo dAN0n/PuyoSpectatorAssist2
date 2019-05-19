@@ -88,7 +88,7 @@ numbers = {
 }
 
 class ChainInfoOverlay:
-    def __init__(self, testmode = False):
+    def __init__(self, puyo_skin='aqua', testmode=False):
         self.screenshot = None
         self.p1_matrix = [[]]
         self.p2_matrix = [[]]
@@ -100,6 +100,7 @@ class ChainInfoOverlay:
         self.testmode = testmode
         self.display_p1 = True
         self.display_p2 = True
+        self.puyo_skin = puyo_skin
 
 
     def captureScreen(self):
@@ -128,8 +129,8 @@ class ChainInfoOverlay:
         return self
     
     def scrapeMatrices(self):
-        self.p1_matrix = scrapeMatrix(self.screenshot, 1)
-        self.p2_matrix = scrapeMatrix(self.screenshot, 2)
+        self.p1_matrix = scrapeMatrix(self.screenshot, 1, self.puyo_skin)
+        self.p2_matrix = scrapeMatrix(self.screenshot, 2, self.puyo_skin)
         return self
     
     def analyzePops(self):     
