@@ -75,6 +75,8 @@ if __name__ == '__main__':
     settings = SimulatorSettings()
     test_image = cv2.imread('calibration_images/ringo_seriri_1.png')
     matrix = scrapeMatrix(test_image, 2, 'aqua')
+    # Change game over cell to default value to prevent incorrect recognizing
+    matrix[1, 2] = '0'
     puyo_matrix = ChainSimulator(matrix, settings).simulateChain()
     print(puyo_matrix.initial_matrix)
     puyo_matrix.openURL()

@@ -131,9 +131,12 @@ class ChainInfoOverlay:
     def scrapeMatrices(self):
         self.p1_matrix = scrapeMatrix(self.screenshot, 1, self.puyo_skin)
         self.p2_matrix = scrapeMatrix(self.screenshot, 2, self.puyo_skin)
+        # Change game over cell to default value to prevent incorrect recognizing
+        self.p1_matrix[self.settings.hidden_rows, 2] = '0'
+        self.p2_matrix[self.settings.hidden_rows, 2] = '0'
         return self
     
-    def analyzePops(self):     
+    def analyzePops(self):
         self.p1_analysis = BruteForcePop(self.p1_matrix, self.settings, print_result=False)
         self.p2_analysis = BruteForcePop(self.p2_matrix, self.settings, print_result=False)
 
