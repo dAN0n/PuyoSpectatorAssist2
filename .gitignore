@@ -112,3 +112,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDE generated directories
+.idea/
+.vscode/
+
+# Calibration generated images
+calibration_images/confirmation/
+calibration_images/_confirmation/
+
+# Temp directory for captured images
+img_new/
