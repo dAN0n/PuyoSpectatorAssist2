@@ -71,12 +71,12 @@ class PuyoSpectatorAssist(tk.Tk):
             return True if new_BGR != old_BGR else False
         # Get max vector length in color cube (100% value)
         # where (0, 0, 0) - black, (255, 255, 255) - white
-        max_length = sqrt(abs(255 ** 2 * 3))
+        max_length = sqrt(255 ** 2 * 3)
         # Get vector length between old and new color
         color_diff_sum = 0
         for i in range(0, 3):
             color_diff_sum += (new_BGR[i] - old_BGR[i]) ** 2
-        length = sqrt(abs(color_diff_sum))
+        length = sqrt(color_diff_sum)
         return True if length / max_length >= percentage else False
     
     def run(self):
